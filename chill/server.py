@@ -10,6 +10,26 @@ import tornado.web
 import tornado.log
 import tornado.escape
 
+class Sound(pygame.mixer.Sound):
+    def __init__(self, filename):
+        super(Sound, self).__init__(filename)
+        self.playing = False
+
+    def __repr__(self):
+        return repr({
+            'volume': self.get_volume(),
+            'playing': self.playing,
+            })
+
+    def start(self):
+        super(Sound, self).start()
+        self.playing = True
+
+    def stop(self):
+        super(Sound, self).stop()
+        self.playing = False
+
+
 class SoundHandler(tornado.web.RequestHandler):
     def initialize(self, sounds):
         self.sounds = sounds
@@ -17,7 +37,8 @@ class SoundHandler(tornado.web.RequestHandler):
 
 class SoundList(SoundHandler):
     def get(self):
-        self.write(tornado.escape.json_encode(self.sounds.keys()))
+        state = {k: str(v) for k, v in self.sounds.items()}
+        self.write(tornado.escape.json_encode(state))
 
 
 class SoundVolume(SoundHandler):
@@ -46,7 +67,7 @@ def main(argv=sys.argv[1:]):
     filenames = glob.glob('../sounds/*.ogg')
     for filename in filenames:
         key = os.path.basename(filename).rstrip('.ogg')
-        sounds[key] = pygame.mixer.Sound(filename)
+        sounds[key] = Sound(filename)
 
     try:
         app = tornado.web.Application([
