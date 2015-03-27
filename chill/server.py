@@ -22,7 +22,7 @@ class Sound(pygame.mixer.Sound):
             })
 
     def start(self):
-        super(Sound, self).start()
+        super(Sound, self).start(loops=-1)
         self.playing = True
 
     def stop(self):
