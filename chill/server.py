@@ -41,21 +41,21 @@ class SoundList(SoundHandler):
         self.write(tornado.escape.json_encode(state))
 
 
-class SoundVolume(SoundHandler):
+class SoundState(SoundHandler):
     def get(self, sound):
         volume = self.get_argument('vol', None)
         if volume is not None and 0.0 <= float(volume) <= 1.0:
             self.sounds[sound].set_volume(float(volume))
 
-        self.write(tornado.escape.json_encode(self.sounds[sound].get_volume()))
+        play = self.get_argument('play', None)
+        if play is not None:
+            if play.lower() == 'true':
+                self.sounds[sound].play()
+            elif play.lower() == 'false':
+                self.sounds[sound].stop()
 
-class SoundPlay(SoundHandler):
-    def get(self, sound):
-        self.sounds[sound].play(loops=-1)
-
-class SoundStop(SoundHandler):
-    def get(self, sound):
-        self.sounds[sound].stop()
+        state = {sound: str(self.sounds[sound])}
+        self.write(tornado.escape.json_encode(state))
 
 
 def main(argv=sys.argv[1:]):
@@ -72,9 +72,7 @@ def main(argv=sys.argv[1:]):
     try:
         app = tornado.web.Application([
             (r"/sounds", SoundList, dict(sounds=sounds)),
-            (r"/sound/([^/]*)", SoundVolume, dict(sounds=sounds)),
-            (r"/sound/([^/]*)/play", SoundPlay, dict(sounds=sounds)),
-            (r"/sound/([^/]*)/stop", SoundStop, dict(sounds=sounds)),
+            (r"/sound/([^/]*)", SoundState, dict(sounds=sounds)),
             ])
 
         app.listen(8888)
