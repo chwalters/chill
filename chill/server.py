@@ -30,7 +30,7 @@ class SoundVolume(SoundHandler):
 
 class SoundPlay(SoundHandler):
     def get(self, sound):
-        self.sounds[sound].play()
+        self.sounds[sound].play(loops=-1)
 
 class SoundStop(SoundHandler):
     def get(self, sound):
