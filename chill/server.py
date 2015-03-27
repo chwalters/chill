@@ -21,8 +21,8 @@ class Sound(pygame.mixer.Sound):
             'playing': self.playing,
             })
 
-    def start(self):
-        super(Sound, self).start(loops=-1)
+    def play(self):
+        super(Sound, self).play(loops=-1)
         self.playing = True
 
     def stop(self):
