@@ -1,0 +1,16 @@
+sounds:
+  - name: fireplace
+    path: ./sounds/fireplace.ogg
+    vol: 0.0
+  - name: forest-rain
+    path: ./sounds/forest-rain.ogg
+    vol: 0.3
+  - name: heavy-rain
+    path: ./sounds/heavy-rain.ogg
+    vol: 0.0
+  - name: stream
+    path: ./sounds/stream.ogg
+    vol: 0.1
+  - name: thunderstorm
+    path: ./sounds/thunderstorm.ogg
+    vol: 0.15
